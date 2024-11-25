@@ -32,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             location=validated_data.get('location'),
             date_of_birth=validated_data.get('date_of_birth'),
         )
+        user.social_links = validated_data.get('social_links', '')
         user.set_password(validated_data['password'])
         print(f"Hashed password: {user.password}") 
         user.save()
