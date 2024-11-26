@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer,UserSerializer
 from .models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -48,3 +49,14 @@ class LoginView(APIView):
                 return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
         except User.DoesNotExist:
             return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+        
+
+
+class UserProfileView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+        user=request.user
+        serializer = UserSerializer(user)
+        print(serializer)
+        return Response(serializer.data)

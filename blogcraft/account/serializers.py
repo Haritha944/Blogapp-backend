@@ -49,3 +49,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         if len(value)!=10:
             raise serializers.ValidationError("Phone number should be 10 digits")
         return value
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'profile_image','location','social_links')
