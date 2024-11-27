@@ -38,4 +38,24 @@ class BlogDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self,request,id):
+        try:
+            post=Post.objects.get(id=id)
+        except Post.DoesNotExist:
+            return Response({"error": "Post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        if request.user!=post.user:
+            return Response({"error": "You are not authorized to delete this post"}, status=status.HTTP_403_FORBIDDEN)
+        post.delete()
+        return Response({"message": "Post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
+
+class BlogCollection(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+        blog_posts=Post.objects.all()
+        if not blog_posts.exists():
+            return Response({"detail": "No posts found for this user."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostSerializer(blog_posts, many=True)
+        return Response(serializer.data)
