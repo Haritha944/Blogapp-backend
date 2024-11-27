@@ -50,7 +50,7 @@ class BlogDetail(APIView):
 
 
 class BlogCollection(APIView):
-    permission_classes=[IsAuthenticated]
+    #permission_classes=[IsAuthenticated]
 
     def get(self,request):
         blog_posts=Post.objects.all()
